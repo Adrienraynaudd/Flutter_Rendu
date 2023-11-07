@@ -1,0 +1,31 @@
+Titre : Réflexion sur le Projet de Gestion de Tâches
+
+Introduction :
+Le projet de gestion de tâches est une application Flutter visant à aider les utilisateurs à gérer leurs tâches quotidiennes. Le but de ce document de réflexion personnelle est de discuter des défis techniques et de gestion que j'ai rencontrés tout au long du projet, ainsi que des compétences que j'ai acquises et des leçons personnelles que j'ai tirées.
+
+Contexte du Projet :
+
+Description du Projet : Le projet de gestion de tâches consiste en une application mobile permettant aux utilisateurs de créer, mettre à jour, marquer comme terminées et supprimer des tâches de leur liste.
+Défis Rencontrés :
+
+Défis Techniques : Pendant le développement de l'application, j'ai rencontré des défis techniques liés à la gestion de la base de données SQLite, à la mise en page de l'interface utilisateur et à la synchronisation des données en temps réel. La mise en place de requêtes paramétrées pour éviter les injections SQL a été un défi particulièrement important.
+
+Défis de Gestion : La gestion du temps et des priorités a été un défi constant. Équilibrer le développement technique avec la gestion de projet a nécessité une planification minutieuse.
+
+Apprentissages Tirés :
+
+Compétences Techniques Acquises : Au cours du projet, j'ai acquis de solides compétences en développement Flutter, notamment la création d'une interface utilisateur conviviale, la gestion de la base de données SQLite et la gestion des états de l'application.
+
+Compétences de Gestion de Projet : J'ai amélioré mes compétences en gestion de projet en apprenant à planifier efficacement, à suivre les progrès du projet et à réagir rapidement aux imprévus.
+
+Apprentissages Personnels : Sur le plan personnel, j'ai appris à persévérer face aux obstacles techniques, à résoudre des problèmes de manière créative, à collaborer efficacement au sein de l'équipe, et à gérer le stress lié aux échéances.
+
+Résultats du Projet :
+
+Évaluation des Résultats : Le projet de gestion de tâches a été un succès, atteignant ses objectifs initiaux. L'application fonctionne correctement, permettant aux utilisateurs de gérer efficacement leurs tâches.
+Conclusion :
+
+Bilan de la Réflexion : Ce projet a été une expérience d'apprentissage enrichissante. J'ai réussi à surmonter les défis techniques et de gestion, en acquérant de nouvelles compétences et en tirant des leçons personnelles importantes. Le projet a abouti à une application fonctionnelle qui répond aux besoins de gestion de tâches des utilisateurs.
+Perspectives Futures :
+
+Perspectives Futures : À l'avenir, je souhaite continuer à développer mes compétences en Flutter et à travailler sur des projets similaires. Je prévois également d'explorer davantage les meilleures pratiques en matière de sécurité des bases de données pour renforcer la sécurité de mes applications.

@@ -36,14 +36,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    dbHelper.getAllTodos().then((todos) {
-      setState(() {
-        tasks = todos
-            .map((todo) => TaskItem(
-                id: todo.id, task: todo.task, isCompleted: todo.isCompleted))
-            .toList();
+    try {
+      // Initialize the tasks list from the database.
+      dbHelper.getAllTodos().then((todos) {
+        setState(() {
+          tasks = todos
+              .map((todo) => TaskItem(
+                  id: todo.id, task: todo.task, isCompleted: todo.isCompleted))
+              .toList();
+        });
       });
-    });
+    } catch (e) {
+      print("Error fetching tasks: $e");
+    }
   }
 
   @override
@@ -57,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Tâches :',
+              'Tasks:', // Display a heading for the task list.
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
@@ -66,19 +71,22 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: tasks.length,
+                itemCount:
+                    tasks.length, // Display the tasks in a scrollable list.
                 itemBuilder: (context, index) {
                   return Card(
                     elevation: 4,
                     margin: EdgeInsets.all(8.0),
                     child: CheckboxListTile(
-                      value: tasks[index].isCompleted,
+                      value: tasks[index]
+                          .isCompleted, // Display a checkbox for task completion.
                       title: Text(
-                        tasks[index].task,
+                        tasks[index].task, // Display the task description.
                         style: TextStyle(
                           fontSize: 18.0,
                           color: tasks[index].isCompleted
-                              ? Colors.grey
+                              ? Colors
+                                  .grey // Style completed tasks differently.
                               : Colors.black,
                           fontWeight: tasks[index].isCompleted
                               ? FontWeight.normal
@@ -87,12 +95,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       ),
                       onChanged: (bool? value) {
                         setState(() {
+                          // Update the task's completion status and save it to the database.
                           tasks[index].isCompleted = value ?? false;
-                          dbHelper.update(Todo(
-                            id: tasks[index].id,
-                            task: tasks[index].task,
-                            isCompleted: tasks[index].isCompleted,
-                          ));
+                          try {
+                            dbHelper.update(Todo(
+                              id: tasks[index].id,
+                              task: tasks[index].task,
+                              isCompleted: tasks[index].isCompleted,
+                            ));
+                          } catch (e) {
+                            print("Error updating the task: $e");
+                          }
                         });
                       },
                     ),
@@ -110,16 +123,21 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             padding: const EdgeInsets.only(left: 20.0),
             child: FloatingActionButton(
               onPressed: () async {
-                final completedTasks =
-                    tasks.where((task) => task.isCompleted).toList();
-                for (final task in completedTasks) {
-                  await dbHelper.delete(task.id!);
+                try {
+                  // Remove completed tasks from the list and database.
+                  final completedTasks =
+                      tasks.where((task) => task.isCompleted).toList();
+                  for (final task in completedTasks) {
+                    await dbHelper.delete(task.id!);
+                  }
+                  setState(() {
+                    tasks.removeWhere((task) => task.isCompleted);
+                  });
+                } catch (e) {
+                  print("Error deleting tasks: $e");
                 }
-                setState(() {
-                  tasks.removeWhere((task) => task.isCompleted);
-                });
               },
-              tooltip: 'Supprimer les tâches terminées',
+              tooltip: 'Delete completed tasks',
               child: Icon(Icons.delete),
               backgroundColor: Colors.deepPurple,
             ),
@@ -167,11 +185,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Text('Ajouter une Tâche'),
+                              Text('Add a Task'),
                               TextField(
                                 controller: taskController,
-                                decoration: InputDecoration(
-                                    labelText: 'Nom de la Tâche'),
+                                decoration:
+                                    InputDecoration(labelText: 'Task Name'),
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -181,27 +199,32 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
-                                    child: Text('Annuler'),
+                                    child: Text('Cancel'),
                                   ),
                                   ElevatedButton(
                                     onPressed: () async {
-                                      final newTask = taskController.text;
-                                      if (newTask.isNotEmpty) {
-                                        final taskItem = TaskItem(
-                                            task: newTask, isCompleted: false);
-                                        final id = await dbHelper.insert(Todo(
-                                          task: taskItem.task,
-                                          isCompleted: taskItem.isCompleted,
-                                        ));
-                                        taskItem.id = id;
-                                        setState(() {
-                                          tasks.add(taskItem);
-                                        });
-                                        taskController.clear();
+                                      try {
+                                        final newTask = taskController.text;
+                                        if (newTask.isNotEmpty) {
+                                          final taskItem = TaskItem(
+                                              task: newTask,
+                                              isCompleted: false);
+                                          final id = await dbHelper.insert(Todo(
+                                            task: taskItem.task,
+                                            isCompleted: taskItem.isCompleted,
+                                          ));
+                                          taskItem.id = id;
+                                          setState(() {
+                                            tasks.add(taskItem);
+                                          });
+                                          taskController.clear();
+                                        }
+                                      } catch (e) {
+                                        print("Error adding a task: $e");
                                       }
                                       Navigator.of(context).pop();
                                     },
-                                    child: Text('Ajouter'),
+                                    child: Text('Add'),
                                     style: ElevatedButton.styleFrom(
                                       primary: Colors.deepPurple,
                                     ),
@@ -216,7 +239,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   },
                 );
               },
-              tooltip: 'Add a Task',
+              tooltip: 'Add a Task', // Tooltip for the add button.
               child: Icon(Icons.add),
               backgroundColor: Colors.deepPurple,
             ),
